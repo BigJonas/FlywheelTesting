@@ -4,16 +4,13 @@
 
 package frc.robot;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.subsystems.FlywheelSub;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -23,10 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private CANSparkMax flywheelMotor1 = new CANSparkMax(6, MotorType.kBrushless);
-  private CANSparkMax flywheelMotor2 = new CANSparkMax(7, MotorType.kBrushless);
-
-  private double flywheelVoltage = 0.0;
+  private FlywheelSub flywheel = new FlywheelSub();
 
   private Logitech stick = new Logitech(0);
   private JoystickButton aButton = new JoystickButton(stick, Logitech.Ports.A);
@@ -35,6 +29,8 @@ public class RobotContainer {
   private JoystickButton yButton = new JoystickButton(stick, Logitech.Ports.Y);
   private JoystickButton leftBumper = new JoystickButton(stick, Logitech.Ports.LEFT_BUMPER);
   private JoystickButton rightBumper = new JoystickButton(stick, Logitech.Ports.RIGHT_BUMPER); 
+
+  private double flywheelVoltage = 0.0;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -61,40 +57,34 @@ public class RobotContainer {
     aButton.whenPressed(new InstantCommand(() -> {
 
       flywheelVoltage += 0.1;
-      SmartDashboard.putNumber("Flywheel Voltage", flywheelVoltage);
 
     }));
     bButton.whenPressed(new InstantCommand(() -> {
 
       flywheelVoltage -= 0.1;
-      SmartDashboard.putNumber("Flywheel Voltage", flywheelVoltage);
 
     }));
     xButton.whenPressed(new InstantCommand(() -> {
 
       flywheelVoltage += 1.0;
-      SmartDashboard.putNumber("Flywheel Voltage", flywheelVoltage);
 
     }));
     yButton.whenPressed(new InstantCommand(() -> {
 
       flywheelVoltage -= 1.0;
-      SmartDashboard.putNumber("Flywheel Voltage", flywheelVoltage);
 
     }));
     leftBumper.whenPressed(new InstantCommand(() -> {
 
       flywheelVoltage = 0.0;
-      flywheelMotor1.setVoltage(Math.max(flywheelVoltage, 0.0));
-      flywheelMotor2.setVoltage(Math.max(flywheelVoltage, 0.0));
-      SmartDashboard.putNumber("Flywheel Voltage", flywheelVoltage);
+      flywheel.setVoltage(Math.max(flywheelVoltage, 0.0));
+      flywheel.setVoltage(Math.max(flywheelVoltage, 0.0));
 
     }));
     rightBumper.whenHeld(new RunCommand(() -> {
 
-      flywheelMotor1.setVoltage(Math.max(flywheelVoltage, 0.0));
-      flywheelMotor2.setVoltage(Math.max(flywheelVoltage, 0.0));
-      SmartDashboard.putNumber("Flywheel Voltage", flywheelVoltage);
+      flywheel.setVoltage(Math.max(flywheelVoltage, 0.0));
+      flywheel.setVoltage(Math.max(flywheelVoltage, 0.0)); 
 
     }));
 
